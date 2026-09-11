@@ -1,31 +1,104 @@
 # Space Parking Station
 
-Welcome to the Space Parking Station GitHub repository! 
+A simulation and allocation engine for docking and parking spacecraft at a
+space station, built with Python (allocation logic, orchestration) and
+designed to be extended with Rust (performance-critical navigation/docking
+checks).
 
 ## Overview
 
-Space Parking Station is a visionary project aimed at revolutionizing space transportation and parking capabilities. Envisioned for the near future, when technological advancements have propelled humanity's presence in space, this station serves as a vital hub for the docking and parking of space vehicles.
-
-## Technologies Used
-
-The station is powered by cutting-edge technologies, with a focus on reliability, performance, and versatility:
-
-- **Rust**: Known for its reliability and performance, Rust ensures the core functionalities of the station, including spacecraft communication, navigation, and automated docking procedures, operate flawlessly in the harsh conditions of space.
-
-- **Python**: Python, with its versatility and ease of use, complements Rust by providing a flexible framework for higher-level operations, such as data analysis, mission planning, and interface development.
+Space Parking Station manages a set of parking bays of different sizes and
+assigns arriving spacecraft to the best available bay. When the station is
+full, spacecraft are queued and served by priority once a bay frees up.
 
 ## Features
 
-At Space Parking Station, advanced algorithms govern the allocation and optimization of parking spaces, ensuring efficient utilization of available resources while accommodating the diverse needs of incoming spacecraft. Whether it's a small shuttle or a large interstellar vessel, the station's automated parking system guarantees safe and secure storage for all types of space vehicles.
+- **Best-fit allocation** — assigns the smallest bay that still fits the
+  spacecraft, so large bays stay free for large spacecraft.
+- **Priority queue** — when no bay is free, spacecraft wait in priority order
+  (with arrival time as a tiebreaker).
+- **Config-driven** — station layout (`config/bays.json`) and simulated
+  traffic (`config/arrivals.json`) are plain JSON, no code changes needed to
+  try a new scenario.
+- **Tested** — core allocation logic has unit test coverage (`tests/`).
 
-Moreover, Space Parking Station serves as more than just a parking facility. It functions as a dynamic node in the interconnected network of space infrastructure, facilitating interstellar trade, scientific exploration, and human colonization endeavors. Equipped with state-of-the-art facilities for maintenance, refueling, and crew support, the station fosters a thriving ecosystem of space travel and commerce.
+## Project structure
 
-## Contribution Guidelines
+```
+python-rust/
+├── config/
+│   ├── bays.json          # station layout: bay IDs and max spacecraft size
+│   └── arrivals.json      # simulated spacecraft arrivals
+├── parking_allocator/
+│   ├── __init__.py
+│   ├── models.py           # Spacecraft, ParkingBay, SpacecraftSize
+│   ├── allocator.py        # ParkingStation: allocation + queue logic
+│   └── config_loader.py    # loads station/arrivals from JSON
+├── tests/
+│   └── test_allocator.py
+├── demo.py                 # runnable simulation
+└── requirements.txt
+```
 
-We welcome contributions from the community to help improve and expand Space Parking Station. If you're interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md) for more information.
+## Installation
 
-## Contact Us
+Requires Python 3.10+.
 
-For any inquiries or feedback, please contact our team at [space-parking-team](mailto:khubaibahmedishtiaq@gmail.com).
+```bash
+cd python-rust
+pip install -r requirements.txt
+```
 
-With its forward-thinking design and reliance on Rust and Python, Space Parking Station epitomizes the spirit of innovation driving humanity's expansion into the cosmos. As technology continues to evolve and humanity's presence in space grows, this project stands ready to play a pivotal role in shaping the future of interstellar transportation and exploration.
+## Usage
+
+Run the demo simulation:
+
+```bash
+python demo.py
+```
+
+Edit `config/bays.json` to change the station's bay layout, or
+`config/arrivals.json` to change which spacecraft arrive and when, then
+re-run the demo — no code changes required.
+
+Run the test suite:
+
+```bash
+pytest tests/
+```
+
+## Using it in your own code
+
+```python
+from parking_allocator import ParkingBay, ParkingStation, Spacecraft, SpacecraftSize
+
+station = ParkingStation([
+    ParkingBay("B1", SpacecraftSize.SHUTTLE),
+    ParkingBay("B2", SpacecraftSize.INTERSTELLAR),
+])
+
+craft = Spacecraft("Shuttle-1", SpacecraftSize.SHUTTLE)
+bay = station.request_parking(craft)  # -> ParkingBay or None if queued
+
+station.release("B1")        # frees the bay and auto-seats the next waiting craft
+station.status_report()      # human-readable station summary
+```
+
+## Architecture / roadmap
+
+Currently the allocation engine is pure Python. The planned Rust component
+will handle performance- and safety-critical work — collision checks,
+docking-approach navigation, and real-time telemetry — communicating with
+the Python layer via [PyO3](https://pyo3.rs/) bindings. This keeps mission
+planning, data analysis, and the allocator itself in Python (fast to
+iterate) while safety-critical control logic runs in Rust (fast and
+memory-safe at runtime).
+
+## Contributing
+
+Contributions are welcome. Please open an issue or pull request describing
+the change. Run the test suite before submitting a PR.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
