@@ -5,6 +5,10 @@ space station, built with Python (allocation logic, orchestration) and
 designed to be extended with Rust (performance-critical navigation/docking
 checks).
 
+## Project Preview
+
+![Space Parking Station Preview](linkedin%20post.png)
+
 ## Overview
 
 Space Parking Station manages a set of parking bays of different sizes and
