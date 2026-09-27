@@ -26,10 +26,6 @@ full, spacecraft are queued and served by priority once a bay frees up.
   try a new scenario.
 - **Tested** — core allocation logic has unit test coverage (`tests/`).
 
-  <p align="center">
-  <img src="linked post.png" alt="Space Parking Station Preview" width="800">
-</p>
-
 ## Project structure
 
 ```
