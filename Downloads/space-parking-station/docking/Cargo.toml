@@ -1,0 +1,8 @@
+[package]
+name = "docking"
+version = "0.1.0"
+edition = "2021"
+description = "Docking approach and collision-check logic for Space Parking Station"
+license = "MIT"
+
+[dependencies]

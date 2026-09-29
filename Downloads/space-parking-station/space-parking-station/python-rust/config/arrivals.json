@@ -1,0 +1,10 @@
+{
+  "arrivals": [
+    { "id": "Shuttle-Alpha", "size": "SHUTTLE", "priority": 0, "arrival_time": 1 },
+    { "id": "Freighter-01", "size": "FREIGHTER", "priority": 0, "arrival_time": 2 },
+    { "id": "Cruiser-Zeta", "size": "CRUISER", "priority": 0, "arrival_time": 3 },
+    { "id": "Interstellar-Ark", "size": "INTERSTELLAR", "priority": 0, "arrival_time": 4 },
+    { "id": "Shuttle-Beta", "size": "SHUTTLE", "priority": 0, "arrival_time": 5 },
+    { "id": "VIP-Cruiser", "size": "CRUISER", "priority": 10, "arrival_time": 6 }
+  ]
+}

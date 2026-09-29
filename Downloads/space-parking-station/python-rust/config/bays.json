@@ -1,0 +1,9 @@
+{
+  "bays": [
+    { "id": "B1", "max_size": "SHUTTLE" },
+    { "id": "B2", "max_size": "SHUTTLE" },
+    { "id": "B3", "max_size": "FREIGHTER" },
+    { "id": "B4", "max_size": "CRUISER" },
+    { "id": "B5", "max_size": "INTERSTELLAR" }
+  ]
+}
